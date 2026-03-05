@@ -1,16 +1,21 @@
-from uuid import uuid4
-from sqlalchemy.orm import Mapped, mapped_column
-from fraccionamiento.database.database import Base
-from datetime import datetime
+from sqlalchemy.orm import relationship, Mapped, mapped_column
+from typing import List, TYPE_CHECKING
+from .Base import BaseClass
+from .user_roles import user_roles_table
 
-class BaseClass(Base):
-    __abstract__ = True
-    id: Mapped[uuid4] = mapped_column(primary_key=True, index=True, default=uuid4)
-    created_at: Mapped[datetime] = mapped_column(default=datetime.now())
-    updated_at: Mapped[datetime] = mapped_column(default=datetime.now(), onupdate=datetime.now())
-    status: Mapped[bool] = mapped_column(default=True)
+if TYPE_CHECKING:
+    from .Role import Role
+
 
 class User(BaseClass):
     __tablename__ = 'users'
-    username: Mapped[str] = mapped_column(unique=True, index=True)
+
+    name: Mapped[str] = mapped_column(unique=True, index=True)
+    email: Mapped[str] = mapped_column(unique=True, index=True)
+    phone: Mapped[str] = mapped_column(unique=True, index=True)
     hashed_password: Mapped[str] = mapped_column()
+
+    roles: Mapped[List["Role"]] = relationship(
+        secondary=user_roles_table,
+        back_populates="users",
+    )
