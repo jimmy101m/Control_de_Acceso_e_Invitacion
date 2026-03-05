@@ -1,9 +1,21 @@
-from sqlalchemy.orm import Mapped, mapped_column
-from fraccionamiento.database.database import Base
+from sqlalchemy.orm import relationship, Mapped, mapped_column
+from typing import List, TYPE_CHECKING
+from .Base import BaseClass
+from .user_roles import user_roles_table
+
+if TYPE_CHECKING:
+    from .Role import Role
 
 
-class User(Base):
+class User(BaseClass):
     __tablename__ = 'users'
-    id: Mapped[int] = mapped_column(primary_key=True, index=True, autoincrement=True)
-    username: Mapped[str] = mapped_column(unique=True, index=True)
+
+    name: Mapped[str] = mapped_column(unique=True, index=True)
+    email: Mapped[str] = mapped_column(unique=True, index=True)
+    phone: Mapped[str] = mapped_column(unique=True, index=True)
     hashed_password: Mapped[str] = mapped_column()
+
+    roles: Mapped[List["Role"]] = relationship(
+        secondary=user_roles_table,
+        back_populates="users",
+    )
