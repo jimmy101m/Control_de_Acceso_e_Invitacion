@@ -1,5 +1,7 @@
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
 from sqlalchemy.orm import sessionmaker
+from fastapi import Depends
+from typing import Annotated
 
 DATABASE_URL = "sqlite+aiosqlite:///./test.db"
 
@@ -14,3 +16,5 @@ AsyncSessionLocal = sessionmaker(
 async def get_session():
     async with AsyncSessionLocal() as session:
         yield session
+
+DBDependency = Annotated[AsyncSession, Depends(get_session)]
