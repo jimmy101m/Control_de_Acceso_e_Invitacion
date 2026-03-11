@@ -11,7 +11,7 @@ if TYPE_CHECKING:
 class User(BaseClass):
     __tablename__ = 'users'
 
-    name: Mapped[str] = mapped_column(unique=True, index=True)
+    name: Mapped[str] = mapped_column(index=True)
     email: Mapped[str] = mapped_column(unique=True, index=True)
     phone: Mapped[str] = mapped_column(unique=True, index=True)
     password: Mapped[str] = mapped_column()
