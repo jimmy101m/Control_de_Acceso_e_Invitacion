@@ -5,17 +5,22 @@ from .user_roles import user_roles_table
 
 if TYPE_CHECKING:
     from .Role import Role
+    from .invitacion import Invitacion
 
 
 class User(BaseClass):
     __tablename__ = 'users'
 
-    name: Mapped[str] = mapped_column(unique=True, index=True)
+    name: Mapped[str] = mapped_column(index=True)
     email: Mapped[str] = mapped_column(unique=True, index=True)
     phone: Mapped[str] = mapped_column(unique=True, index=True)
-    hashed_password: Mapped[str] = mapped_column()
+    password: Mapped[str] = mapped_column()
 
     roles: Mapped[List["Role"]] = relationship(
         secondary=user_roles_table,
         back_populates="users",
+    )
+
+    invitaciones: Mapped[List["Invitacion"]] = relationship(
+        back_populates="invitado_por",
     )
